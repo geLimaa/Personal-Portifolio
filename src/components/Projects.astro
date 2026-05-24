@@ -84,6 +84,7 @@ const carouselProjects = [...projects, ...projects, ...projects];
   const projectCount = Number(carousel?.dataset.count ?? 0);
   let activeIndex = projectCount;
   let autoplay: number | undefined;
+  let resetTimer: number | undefined;
   let isResetting = false;
 
   function getProjectIndex(index: number) {
@@ -94,9 +95,7 @@ const carouselProjects = [...projects, ...projects, ...projects];
   function normalizePosition() {
     if (!track || !projectCount || isResetting) return;
 
-    let normalizedIndex = activeIndex;
-    if (activeIndex >= projectCount * 2) normalizedIndex = activeIndex - projectCount;
-    if (activeIndex < projectCount) normalizedIndex = activeIndex + projectCount;
+    let normalizedIndex = projectCount + getProjectIndex(activeIndex);
     if (normalizedIndex === activeIndex) return;
 
     isResetting = true;
@@ -109,10 +108,19 @@ const carouselProjects = [...projects, ...projects, ...projects];
     });
   }
 
+  function schedulePositionReset() {
+    window.clearTimeout(resetTimer);
+    if (activeIndex >= projectCount * 2 || activeIndex < projectCount) {
+      resetTimer = window.setTimeout(normalizePosition, 520);
+    }
+  }
+
   function centerActiveCard() {
     if (!carousel || !track || !cards.length) return;
 
-    const activeCard = cards[activeIndex];
+    const activeCard = cards[activeIndex] ?? cards[projectCount + getProjectIndex(activeIndex)];
+    if (!activeCard) return;
+
     const carouselCenter = carousel.clientWidth / 2;
     const cardCenter = activeCard.offsetLeft + activeCard.offsetWidth / 2;
     track.style.transform = `translateX(${carouselCenter - cardCenter}px)`;
@@ -143,6 +151,7 @@ const carouselProjects = [...projects, ...projects, ...projects];
     });
 
     centerActiveCard();
+    schedulePositionReset();
   }
 
   function restartAutoplay() {
