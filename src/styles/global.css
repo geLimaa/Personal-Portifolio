@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --color-portfolio-bg: #08090b;
+  --color-portfolio-panel: #11151c;
+  --color-portfolio-line: #243244;
+  --color-portfolio-mint: #34d399;
+  --color-portfolio-cyan: #38bdf8;
+  --color-portfolio-violet: #8b5cf6;
+  --color-portfolio-amber: #f59e0b;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    overflow-x: hidden;
+    background:
+      radial-gradient(circle at 12% 16%, rgba(56, 189, 248, 0.14), transparent 28rem),
+      radial-gradient(circle at 84% 18%, rgba(52, 211, 153, 0.12), transparent 24rem),
+      radial-gradient(circle at 76% 82%, rgba(139, 92, 246, 0.12), transparent 30rem),
+      #08090b;
+    color: white;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  section {
+    scroll-margin-top: 88px;
+  }
+}
+
+@utility gradient-text {
+  background: linear-gradient(90deg, #38bdf8 0%, #34d399 48%, #f59e0b 100%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility gradient-surface {
+  background: linear-gradient(135deg, #38bdf8 0%, #34d399 55%, #f59e0b 100%);
+}
+
+@utility glass-panel {
+  background: rgba(17, 21, 28, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(18px);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+}
+
+@utility no-scrollbar-webkit {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,0 +1,44 @@
+---
+import { aboutImages } from "../data/portfolio";
+---
+
+<section id="about" class="mx-auto flex min-h-screen max-w-7xl items-center px-5 py-24 sm:px-8">
+  <div class="grid w-full items-center gap-12 lg:grid-cols-2 lg:gap-20">
+    <div class="order-2 flex flex-col items-center lg:order-1">
+      <p class="mb-3 text-sm font-semibold uppercase tracking-[0.22em] text-emerald-200">Communities & Technologies</p>
+      <div class="grid max-w-xl grid-cols-2 gap-4">
+        {aboutImages.map((image) => (
+          <img
+            src={image.src}
+            alt={image.alt}
+            class="h-36 w-full rounded-2xl border border-white/10 object-cover transition duration-300 hover:scale-105 hover:shadow-[0_0_28px_rgba(52,211,153,0.24)] sm:h-40"
+          />
+        ))}
+      </div>
+    </div>
+
+    <div class="order-1 lg:order-2">
+      <p class="mb-3 text-center text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200 lg:text-left">About me</p>
+      <h2 class="mb-5 text-center text-5xl font-bold sm:text-6xl lg:text-left">Building from fundamentals to interfaces.</h2>
+      <p class="text-base leading-8 text-zinc-300">
+        I'm a Brazilian Computer Science student at UFRN with a strong interest in web development and cybersecurity. I
+        like projects that connect fundamentals with usable products: C++ algorithms, Java networking, responsive
+        interfaces, and increasingly better developer experience with Astro and Tailwind.
+      </p>
+      <div class="mt-7 grid gap-3 sm:grid-cols-3">
+        <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+          <p class="text-2xl font-bold text-cyan-200">UFRN</p>
+          <p class="mt-1 text-sm text-zinc-400">Computer Science</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+          <p class="text-2xl font-bold text-emerald-200">IEEE</p>
+          <p class="mt-1 text-sm text-zinc-400">Tech community</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+          <p class="text-2xl font-bold text-amber-200">PotiCode</p>
+          <p class="mt-1 text-sm text-zinc-400">Junior enterprise</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

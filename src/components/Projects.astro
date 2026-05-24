@@ -1,0 +1,185 @@
+---
+import { projects } from "../data/portfolio";
+
+const carouselProjects = [...projects, ...projects, ...projects];
+---
+
+<section id="projects" class="mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-5 py-24 sm:px-8">
+  <div class="mb-9 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="mb-3 text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200">Selected work</p>
+      <h2 class="text-5xl font-bold sm:text-6xl"><span class="gradient-text">My</span> Projects</h2>
+    </div>
+    <div class="flex gap-3">
+      <button type="button" class="project-prev flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xl transition hover:border-cyan-300/40 hover:text-cyan-200" aria-label="Previous project">
+        <i class="bx bx-chevron-left"></i>
+      </button>
+      <button type="button" class="project-next flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xl transition hover:border-cyan-300/40 hover:text-cyan-200" aria-label="Next project">
+        <i class="bx bx-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="project-carousel relative overflow-hidden py-8" data-count={projects.length}>
+    <div class="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#08090b] to-transparent sm:w-28"></div>
+    <div class="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#08090b] to-transparent sm:w-28"></div>
+
+    <div class="project-track flex gap-5 transition-transform duration-500 ease-out will-change-transform sm:gap-7">
+      {carouselProjects.map((project, index) => (
+        <article
+          class="project-card glass-panel flex min-h-[500px] w-[82vw] shrink-0 flex-col overflow-hidden rounded-2xl p-5 opacity-60 blur-[0.2px] transition-all duration-500 sm:w-[390px]"
+          data-index={index}
+          data-project-index={index % projects.length}
+        >
+          {project.image ? (
+            <img src={project.image} alt={project.alt} class="h-48 w-full rounded-xl object-cover" />
+          ) : (
+            <div class="flex h-48 w-full items-center justify-center rounded-xl border border-white/10 bg-[linear-gradient(135deg,rgba(56,189,248,0.18),rgba(52,211,153,0.16),rgba(245,158,11,0.13))]">
+              <span class="text-6xl font-black tracking-wider text-white/85">{project.visual}</span>
+            </div>
+          )}
+
+          <div class="mt-5 flex flex-wrap gap-2">
+            {project.tech.map((tech) => (
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold text-zinc-300">{tech}</span>
+            ))}
+          </div>
+
+          <h3 class="mt-5 text-2xl font-semibold">{project.title}</h3>
+          <p class="mt-3 flex-1 text-sm leading-7 text-zinc-300">{project.description}</p>
+          <a
+            href={project.href}
+            target="_blank"
+            rel="noreferrer"
+            class="mt-6 inline-flex items-center gap-2 self-start rounded-full border border-cyan-300/20 bg-cyan-300/10 px-5 py-2 text-sm font-bold text-cyan-100 transition duration-200 hover:-translate-y-0.5 hover:border-cyan-300/50 hover:bg-cyan-300/20 active:opacity-70"
+          >
+            See More <i class="bx bx-right-arrow-alt text-lg"></i>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <div class="project-dots mt-5 flex justify-center gap-2">
+    {projects.map((project, index) => (
+      <button
+        type="button"
+        class="project-dot h-2.5 rounded-full bg-white/20 transition-all duration-300 hover:bg-cyan-200 data-[active=true]:w-8 data-[active=true]:bg-cyan-200"
+        data-index={index}
+        data-active={index === 0 ? "true" : "false"}
+        aria-label={`Show ${project.title}`}
+      ></button>
+    ))}
+  </div>
+</section>
+
+<script>
+  const carousel = document.querySelector<HTMLElement>(".project-carousel");
+  const track = document.querySelector<HTMLElement>(".project-track");
+  const cards = Array.from(document.querySelectorAll<HTMLElement>(".project-card"));
+  const previous = document.querySelector<HTMLButtonElement>(".project-prev");
+  const next = document.querySelector<HTMLButtonElement>(".project-next");
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>(".project-dot"));
+
+  const projectCount = Number(carousel?.dataset.count ?? 0);
+  let activeIndex = projectCount;
+  let autoplay: number | undefined;
+  let isResetting = false;
+
+  function getProjectIndex(index: number) {
+    if (!projectCount) return 0;
+    return ((index % projectCount) + projectCount) % projectCount;
+  }
+
+  function normalizePosition() {
+    if (!track || !projectCount || isResetting) return;
+
+    let normalizedIndex = activeIndex;
+    if (activeIndex >= projectCount * 2) normalizedIndex = activeIndex - projectCount;
+    if (activeIndex < projectCount) normalizedIndex = activeIndex + projectCount;
+    if (normalizedIndex === activeIndex) return;
+
+    isResetting = true;
+    activeIndex = normalizedIndex;
+    track.classList.remove("transition-transform");
+    centerActiveCard();
+    requestAnimationFrame(() => {
+      track.classList.add("transition-transform");
+      isResetting = false;
+    });
+  }
+
+  function centerActiveCard() {
+    if (!carousel || !track || !cards.length) return;
+
+    const activeCard = cards[activeIndex];
+    const carouselCenter = carousel.clientWidth / 2;
+    const cardCenter = activeCard.offsetLeft + activeCard.offsetWidth / 2;
+    track.style.transform = `translateX(${carouselCenter - cardCenter}px)`;
+  }
+
+  function renderCarousel(index: number) {
+    activeIndex = index;
+
+    cards.forEach((card, cardIndex) => {
+      const distance = Math.abs(cardIndex - activeIndex);
+      const isActive = distance === 0;
+      const isNear = distance === 1;
+
+      card.classList.toggle("scale-100", isActive);
+      card.classList.toggle("opacity-100", isActive);
+      card.classList.toggle("blur-0", isActive);
+      card.classList.toggle("z-20", isActive);
+      card.classList.toggle("scale-90", isNear);
+      card.classList.toggle("opacity-80", isNear);
+      card.classList.toggle("z-10", isNear);
+      card.classList.toggle("scale-[0.78]", !isActive && !isNear);
+      card.classList.toggle("opacity-45", !isActive && !isNear);
+    });
+
+    const activeProjectIndex = getProjectIndex(activeIndex);
+    dots.forEach((dot, dotIndex) => {
+      dot.dataset.active = dotIndex === activeProjectIndex ? "true" : "false";
+    });
+
+    centerActiveCard();
+  }
+
+  function restartAutoplay() {
+    window.clearInterval(autoplay);
+    autoplay = window.setInterval(() => renderCarousel(activeIndex + 1), 4800);
+  }
+
+  previous?.addEventListener("click", () => {
+    renderCarousel(activeIndex - 1);
+    restartAutoplay();
+  });
+
+  next?.addEventListener("click", () => {
+    renderCarousel(activeIndex + 1);
+    restartAutoplay();
+  });
+
+  cards.forEach((card) => {
+    card.addEventListener("click", () => {
+      renderCarousel(Number(card.dataset.index ?? 0));
+      restartAutoplay();
+    });
+  });
+
+  dots.forEach((dot) => {
+    dot.addEventListener("click", () => {
+      renderCarousel(projectCount + Number(dot.dataset.index ?? 0));
+      restartAutoplay();
+    });
+  });
+
+  carousel?.addEventListener("mouseenter", () => window.clearInterval(autoplay));
+  carousel?.addEventListener("mouseleave", restartAutoplay);
+  track?.addEventListener("transitionend", normalizePosition);
+  window.addEventListener("resize", centerActiveCard);
+  window.addEventListener("load", () => renderCarousel(activeIndex));
+
+  renderCarousel(activeIndex);
+  restartAutoplay();
+</script>

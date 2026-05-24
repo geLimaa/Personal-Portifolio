@@ -1,0 +1,68 @@
+---
+import { navItems } from "../data/portfolio";
+---
+
+<header class="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#08090b]/75 backdrop-blur-xl">
+  <nav class="mx-auto flex h-18 max-w-7xl items-center justify-between px-5 sm:px-8">
+    <a href="#home" class="group text-xl font-black tracking-tight sm:text-2xl" aria-label="Go to home">
+      <span class="relative inline-flex items-baseline">
+        <span class="text-white">Gean</span>
+        <span class="gradient-text ml-1.5">Lima</span>
+        <span class="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-50 bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300 transition duration-300 group-hover:scale-x-100"></span>
+      </span>
+    </a>
+
+    <button
+      type="button"
+      class="menu-toggle relative z-50 inline-flex h-11 w-11 items-center justify-center rounded-md text-3xl text-white transition hover:text-cyan-300 md:hidden"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="primary-navigation"
+    >
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <ul
+      id="primary-navigation"
+      class="nav-links fixed right-[-100%] top-0 flex h-screen w-64 flex-col items-center justify-center gap-9 border-l border-white/10 bg-[#08090b]/95 font-semibold text-zinc-200 backdrop-blur-xl transition-[right] duration-300 md:static md:h-auto md:w-auto md:flex-row md:justify-end md:border-0 md:bg-transparent md:backdrop-blur-none"
+    >
+      {navItems.map((item) => (
+        <li>
+          <a href={item.href} class="inline-block transition duration-300 hover:text-cyan-300">
+            {item.label}
+          </a>
+        </li>
+      ))}
+      <li class="md:hidden">
+        <a href="#contact" class="inline-block transition duration-300 hover:text-cyan-300">Contact</a>
+      </li>
+    </ul>
+
+    <a
+      href="#contact"
+      class="hidden rounded-full border border-cyan-300/25 bg-cyan-300/10 px-5 py-2.5 text-sm font-bold tracking-wide text-cyan-100 transition duration-300 hover:border-cyan-300/55 hover:bg-cyan-300/20 md:inline-flex"
+    >
+      Contact Me
+    </a>
+  </nav>
+</header>
+
+<script>
+  const menuToggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+  const navLinks = document.querySelector<HTMLElement>(".nav-links");
+  const links = navLinks?.querySelectorAll("a") ?? [];
+
+  function closeMenu() {
+    navLinks?.classList.remove("right-0");
+    navLinks?.classList.add("right-[-100%]");
+    menuToggle?.setAttribute("aria-expanded", "false");
+  }
+
+  menuToggle?.addEventListener("click", () => {
+    const isOpen = navLinks?.classList.toggle("right-0") ?? false;
+    navLinks?.classList.toggle("right-[-100%]", !isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  links.forEach((link) => link.addEventListener("click", closeMenu));
+</script>
