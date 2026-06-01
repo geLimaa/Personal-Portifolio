@@ -66,7 +66,7 @@ export const projects = [
     description:
       "A responsive personal portfolio rebuilt with Astro and Tailwind to present projects, technical skills, and experience through a clean developer-focused interface.",
     href: "https://github.com/geLimaa/Personal-Portifolio",
-  },
+  }
 ];
 
 export const skillCategories = [
@@ -95,7 +95,7 @@ export const skillCategories = [
   },
   {
     title: "Computer Science",
-    description: "Estruturas, algoritmos e projetos de baixo nivel.",
+    description: "Data structures, algorithms and low level projects.",
     skills: [
       { name: "Data Structures", icon: "bx-network-chart" },
       { name: "Algorithms", icon: "bx-code-curly" },
